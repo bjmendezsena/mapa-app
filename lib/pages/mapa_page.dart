@@ -27,8 +27,14 @@ class _MapaPageState extends State<MapaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<MiUbicacionBloc, MiUbicacionState>(
-        builder: (context, state) => crearMapa(state),
+      body: Stack(
+        children: [
+          BlocBuilder<MiUbicacionBloc, MiUbicacionState>(
+            builder: (context, state) => crearMapa(state),
+          ),
+          Positioned(top: 10, child: SearchBar()),
+          MarcadorManual()
+        ],
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -42,7 +48,7 @@ class _MapaPageState extends State<MapaPage> {
   }
 
   Widget crearMapa(MiUbicacionState state) {
-    if (!state.existeUbicacion) return Center(child: Text('Ubicando...'));
+    if (!state.existeUbicacion) return Center(child: Text('Buscando ubicación...'));
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
 
@@ -50,15 +56,21 @@ class _MapaPageState extends State<MapaPage> {
 
     final cameraPosition =
         new CameraPosition(target: state.ubicacion, zoom: 15);
-    return GoogleMap(
-      initialCameraPosition: cameraPosition,
-      myLocationEnabled: true,
-      myLocationButtonEnabled: false,
-      zoomControlsEnabled: false,
-      onMapCreated: mapaBloc.initMapa,
-      polylines: mapaBloc.state.polylines.values.toSet(),
-      onCameraMove: (cameraPosition){
-        mapaBloc.add(OnMovioMapa(cameraPosition.target));
+
+    return BlocBuilder<MapaBloc, MapaState>(
+      builder: (context, _) {
+        return GoogleMap(
+          initialCameraPosition: cameraPosition,
+          myLocationEnabled: true,
+          myLocationButtonEnabled: false,
+          zoomControlsEnabled: false,
+          onMapCreated: mapaBloc.initMapa,
+          polylines: mapaBloc.state.polylines.values.toSet(),
+          markers: mapaBloc.state.markers.values.toSet(),
+          onCameraMove: (cameraPosition) {
+            mapaBloc.add(OnMovioMapa(cameraPosition.target));
+          },
+        );
       },
     );
   }

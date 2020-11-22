@@ -6,6 +6,13 @@ class BtnUbicacion extends StatelessWidget {
     final mapaBloc = context.bloc<MapaBloc>();
     final ubicacionBloc = context.bloc<MiUbicacionBloc>();
     return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(100)),
+        boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.black12, blurRadius: 5, offset: Offset(0, 5))
+              ]
+      ),
       margin: EdgeInsets.only(bottom: 10),
       child: CircleAvatar(
         backgroundColor: Colors.white,

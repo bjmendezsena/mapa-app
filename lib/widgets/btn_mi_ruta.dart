@@ -16,6 +16,9 @@ class BtnMiRuta extends StatelessWidget {
           },
         ),
       ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(100)),boxShadow: <BoxShadow>[
+        BoxShadow(color: Colors.black12, blurRadius: 5, offset: Offset(0, 5))
+      ]),
     );
   }
 }
